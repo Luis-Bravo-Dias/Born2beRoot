@@ -13,7 +13,7 @@ URAM=$(free -m | awk '$1 == "Mem:" {print $3}')
 RAMper=$(free | awk '$1 == "Mem:" {printf("%.2f"), $3/$2*100}')
 #RAMper é o raio de utelização da memória em percentagem
 # {printf("%.2f"), $3/$2*100} escreve o resultado da divisão da terceira coluna (memória usada) pela segunda coluna (memória total) multiplicado por 100 para conseguir a percentagem
-echo "Memory Usage: $URAM/${TRAM}MB ($RAMper%)"
+echo "Memory Usage: $URAM/${TRAM}MB ($RAMper%)"#->The current available RAM on your server and its utilization rate as a percentage
 
 LBOOT=$(uptime -s)
 #uptime mostra há quanto tempo a maquina está ligada e -s mostra a data do último reboot
