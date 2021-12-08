@@ -1,3 +1,4 @@
+#!/bin/bash
 echo "Architecture: $(uname -a)"
 echo "CPU physical: $(grep -c processor /proc/cpuinfo)"
 echo "vCPU: $(nproc)"
@@ -5,7 +6,11 @@ TRAM=$(free -m | awk '$1 == "Mem:" {print $2}')
 URAM=$(free -m | awk '$1 == "Mem:" {print $3}')
 RAMper=$(free | awk '$1 == "Mem:" {printf("%.2f"), $3/$2*100}')
 echo "Memory Usage: $URAM/${TRAM}MB ($RAMper%)"
-
+Tdisk=$(df -Bg | grep '^/dev/' | grep -v '/boot$' | awk '{ft += $2} END {print ft}')
+Udisk=$(df -Bm | grep '^/dev/' | grep -v '/boot$' | awk '{ut += $3} END {print ut}')
+diskper=$(df -Bm | grep '^/dev/' | grep -v '/boot$' | awk '{ut += $3} {ft+= $2} END {printf("%d"), ut/ft*100}')
+echo "Disk Usage: $Udisk/${Tdisk}Gb ($diskper%)"
+echo "CPU load: $(top -bn1 | grep '^%Cpu' | cut -c 9- | xargs | awk '{printf("%.1f%%"), $1 + $3}')"
 LBOOT=$(uptime -s)
 echo "Last boot: ${LBOOT::-3}"
 LVMC=$(lsblk | grep lvm | wc -l)
