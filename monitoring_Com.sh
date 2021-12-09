@@ -1,8 +1,10 @@
 #!/bin/bash
 echo "Architecture: $(uname -a)"#-> The architecture of your operating system and its kernel version
 #echo funciona como printf e o $ como o %
+
 echo "CPU physical: $(grep -c processor /proc/cpuinfo)"#-> The number of physical processors
 #grep procura a palavra processor no /proc/cpuinfo e -c conta quantas vezes aparece
+
 echo "vCPU: $(nproc)"#-> The number of virtual processors
 #nproc dá o número de processadores virtuais
 
@@ -32,7 +34,11 @@ diskper=$(df -Bm | grep '^/dev/' | grep -v '/boot$' | awk '{ut += $3} {ft+= $2} 
 #awk '{ut += $3} {ft+= $2} END {printf("%d"), ut/ft*100}') escreve o resultado da divisão da terceira coluna (memória usada) pela segunda coluna (memória total) multiplicado por 100 para conseguir a percentagem
 echo "Disk Usage: $Udisk/${Tdisk}Gb ($diskper%)"#->The current available memory on your server and its utilization rate as a percentage
 
-echo "CPU load: $(top -bn1 | grep '^%Cpu' | cut -c 9- | xargs | awk '{printf("%.1f%%"), $1 + $3}')"#->The current utilization rate of your processors as a percentage
+echo "CPU load: $(mpstat | grep all | awk '{printf "%.2f%%\n", 100-$13}')"#->The current utilization rate of your processors as a percentage
+#para usar mpstat é necessário instalar o sysstat (apt install sysstat)
+#Com mpstat obtemos os dados de utelização do CPU
+#Com grep all conseguimos a linha onde estão os valores
+#awk '{printf "%.2f%%\n", 100-$13}' vai imprimir o valor da 13 coluna (idle) que é a percentagem de CPU que não está a ser usada subtraido por 100, o que vai dar a percentagem que está a ser usada
 
 LBOOT=$(uptime -s)
 #uptime mostra há quanto tempo a maquina está ligada e -s mostra a data do último reboot
@@ -53,6 +59,7 @@ echo "lvm use: $LVMA"#-> Whether LVM is active or not
 
 echo "Connexions TCP : $(netstat -ant | grep ESTABLISHED | wc -l) ESTABLISHED"#->The number of active connections
 #netstat -ant lista as conexões tcp, o grep vai buscar as que têm ESTABLISHED e com wc -l conta quantas são
+
 echo "User log: $(users | wc -w)"#->The number of users using the server
 #users mostra os utelizadores ligados ao servidor e com wc -w contamos as palavras (utelizadores)
 
@@ -61,6 +68,7 @@ IP_MAC=$(ip a | grep ether | cut -d " " -f6)
 #com cut -d " " -f6 selecionamos a parte da string que queremos
 echo "Network: IP $(hostname -I) (${IP_MAC})"#->The IPv4 address of your server and its MAC (Media Access Control) address
 #hostname dá o nome do host e com -I obtemos o IP do server
+
 echo "Sudo : $(sudo journalctl _COMM=sudo | grep COMMAND | wc -l) cmd"#->The number of commands executed with the sudo program
 #journalctl precisa de sudo antes, mas não é necessário se estiver no Root
 #jornalct _COMM=sudo | grep COMMAND lista todos os comandos sudo realizados pelos utilizadores

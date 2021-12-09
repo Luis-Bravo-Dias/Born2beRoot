@@ -10,7 +10,7 @@ Tdisk=$(df -Bg | grep '^/dev/' | grep -v '/boot$' | awk '{ft += $2} END {print f
 Udisk=$(df -Bm | grep '^/dev/' | grep -v '/boot$' | awk '{ut += $3} END {print ut}')
 diskper=$(df -Bm | grep '^/dev/' | grep -v '/boot$' | awk '{ut += $3} {ft+= $2} END {printf("%d"), ut/ft*100}')
 echo "Disk Usage: $Udisk/${Tdisk}Gb ($diskper%)"
-echo "CPU load: $(top -bn1 | grep '^%Cpu' | cut -c 9- | xargs | awk '{printf("%.1f%%"), $1 + $3}')"
+echo "CPU load: $(mpstat | grep all | awk '{printf "%.2f%%\n", 100-$13}')"
 LBOOT=$(uptime -s)
 echo "Last boot: ${LBOOT::-3}"
 LVMC=$(lsblk | grep lvm | wc -l)
