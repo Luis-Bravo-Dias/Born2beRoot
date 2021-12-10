@@ -23,7 +23,7 @@ Tdisk=$(df -Bg | grep '^/dev/' | grep -v '/boot$' | awk '{ft += $2} END {print f
 #Tdisk ė a memória total do disco
 #com df temos os dados de memória do disco e com -Bg temos esses dados em G
 #com grep '^/dev/' agarramos apenas as linhas que começam por /dev/ e com o grep -v '/boot' exclui a linha de boot
-#com awk '{ft += $2} criamos uma variavel que vai ter no seu interior a soma do valor da segunda coluna (valor total) de cada linha que agarramos
+#com awk '{ft += $2}' criamos uma variavel que vai ter no seu interior a soma do valor da segunda coluna (valor total) de cada linha que agarramos
 #com END {print ft}') sendo um comando END só será lido no fim de todas as operações, imprimindo o valor da variável que criamos
 Udisk=$(df -Bm | grep '^/dev/' | grep -v '/boot$' | awk '{ut += $3} END {print ut}')
 #Udisk é a memória usada no disco
@@ -69,7 +69,7 @@ IP_MAC=$(ip a | grep ether | cut -d " " -f6)
 echo "Network: IP $(hostname -I) (${IP_MAC})"#->The IPv4 address of your server and its MAC (Media Access Control) address
 #hostname dá o nome do host e com -I obtemos o IP do server
 
-echo "Sudo : $(sudo journalctl _COMM=sudo | grep COMMAND | wc -l) cmd"#->The number of commands executed with the sudo program
+echo "Sudo : $(journalctl _COMM=sudo | grep COMMAND | wc -l) cmd"#->The number of commands executed with the sudo program
 #journalctl precisa de sudo antes, mas não é necessário se estiver no Root
 #jornalct _COMM=sudo | grep COMMAND lista todos os comandos sudo realizados pelos utilizadores
 #wc -l conta quantos comandos estão listados
