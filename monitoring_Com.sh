@@ -71,5 +71,5 @@ echo "Network: IP $(hostname -I) (${IP_MAC})"#->The IPv4 address of your server 
 
 echo "Sudo : $(journalctl _COMM=sudo | grep COMMAND | wc -l) cmd"#->The number of commands executed with the sudo program
 #journalctl precisa de sudo antes, mas não é necessário se estiver no Root
-#jornalct _COMM=sudo | grep COMMAND lista todos os comandos sudo realizados pelos utilizadores
+#jornalctl _COMM=sudo | grep COMMAND lista todos os comandos sudo realizados pelos utilizadores
 #wc -l conta quantos comandos estão listados
